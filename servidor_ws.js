@@ -54,7 +54,12 @@ function iniciarWSAvisos(servidorWeb) {
                             contenidoToken = autenticacion.comprobarToken(msg.token);
                         } catch (error) {
                             connection.sendUTF(JSON.stringify({ operacion: "error", texto: error.message }));
-                            connection.close();
+                            connection.close(1008, "Token no valido"); // 1008 = conexión rechazada por la política del servidor
+                            // En Render hay un proxy delante y el cierre "educado" puede no completarse:
+                            // si al cabo de 1 segundo la conexión sigue abierta, la cortamos del todo
+                            setTimeout(function () {
+                                connection.drop(1008, "Token no valido", true);
+                            }, 1000);
                             return;
                         }
                         cliente.id = contenidoToken.usuario; // el id lo sacamos del token, no de lo que diga el cliente
