@@ -1,0 +1,8 @@
+# Dependencias: se instalan con "npm install"
+node_modules/
+
+# Configuración local con contraseñas: NUNCA se sube (el repositorio es público)
+.env
+
+# Datos de la base de datos (incluyen usuarios y contraseñas)
+sql/datos.sql
